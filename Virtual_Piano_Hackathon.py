@@ -2,12 +2,35 @@ import pygame
 
 pygame.init()
 
+#Intro stuff for display
+win = pygame.display.set_mode((1300, 700))
+pygame.mixer.set_num_channels(88)
+piano = pygame.image.load("piano 1.jpg")
+piano = pygame.transform.scale(piano,(1300,200))
+piano_x = 0
+piano_y = 500
+white = (255,255,255)
+black = (0,0,0)
+red = (255,0,0)
+win = pygame.display.set_mode((1300, 700))
+
+win.fill((255,255,255))
+c3coordinates = (590,630)
+win.blit(piano, (piano_x, piano_y))
+grey = (128, 128, 128)
+win = pygame.display.set_mode((1300, 700))
+pygame.mixer.set_num_channels(88)
+pygame.display.update()
+#pygame.draw.circle(win,red,c3coordinates,3)
+
 
 class Piano_Key:
-    def __init__(self, key, file_name, Channel_ID):
+    def __init__(self, key, file_name, Channel_ID, x_coordinate):
         self.key = key
         self.file_name = file_name
         self.Channel_ID = Channel_ID
+        self.x_coordinate = x_coordinate
+        self.y_coordinate = 630
 
     def play(self):
         file_play = pygame.mixer.Sound(self.file_name)
@@ -16,7 +39,9 @@ class Piano_Key:
 
     def stop(self):
         pygame.mixer.Channel(self.Channel_ID).fadeout(300)
-
+    def dot_placement(self):
+        pygame.draw.circle(win,red,(self.x_piano_coordinate,  y_piano_coordinate),3)
+        
 
 keys = []
 
@@ -29,9 +54,7 @@ def find_piano_key(piano_key):
     return c
 
 
-win = pygame.display.set_mode((1300, 700))
-pygame.mixer.set_num_channels(88)
-pygame.display.update()
+
 
 # home-row c maj scale
 keys.append(Piano_Key("caps lock", "converted_wav_notes/_b2.wav", 81))
@@ -105,22 +128,10 @@ keys.append(Piano_Key(".", "converted_wav_notes/_d5.wav", 47))
 keys.append(Piano_Key("/", "converted_wav_notes/_e5.wav", 48))
 keys.append(Piano_Key("right shift","converted_wav_notes/_f5.wav",51))
 piano = pygame.image.load("piano 1.jpg")
-pygame.display.set_caption("Piano by Jatin and Bolang")
-piano = pygame.transform.scale(piano,(1300,200))
-piano_x = 0
-piano_y = 500
-white = (255,255,255)
-black = (0,0,0)
-red = (255,0,0)
-win = pygame.display.set_mode((1300, 700))
-win.fill((255,255,255))
-c3coordinates = (590,630)
-win.blit(piano, (piano_x, piano_y))
-grey = (128, 128, 128)
-pygame.draw.circle(win,red,c3coordinates,3)
+pygame.display.set_caption("Piano Emulator")
+
+
 pygame.display.update()
-
-
 while True:
     try:
         pygame.event.pump()
@@ -130,6 +141,7 @@ while True:
                 keyname = pygame.key.name(event.key)
                 pressed_key = find_piano_key(keyname)
                 pressed_key.play()
+                pressed_key.dot_placement()
                 pygame.display.update()
             if event.type == pygame.KEYUP:
                 keyupname = pygame.key.name(event.key)
